@@ -112,7 +112,7 @@ public class App extends Application {
         root.getChildren().add(imageView_fondo2);
         root.getChildren().add(imageView_personaje);
         
-               // Comenzamos con la animación del fondo, en este caso se mueve de modo lateral----------------
+        // Comenzamos con la animación del fondo, en este caso se mueve de modo lateral----------------
         Timeline timeline;
         timeline = new Timeline(
                 // 0.017 ~= 60 FPS
@@ -139,7 +139,7 @@ public class App extends Application {
     circleBall.setCenterX(0); // obligatoriamente debe de tener una medida, double permite decimales
     circleBall.setCenterY(600);
     circleBall.setRadius(20);//son métodos: nosequé. lo que sea
-    circleBall.setFill(javafx.scene.paint.Color.WHITE);//Cambiar el color de la bola
+    circleBall.setFill(javafx.scene.paint.Color.TRANSPARENT);//Cambiar el color de la bola
 
 
     double r= circleBall.getRadius()*2; //me retorna un número
@@ -168,11 +168,11 @@ public class App extends Application {
     scene.setOnKeyPressed((final KeyEvent keyEvent) -> {
         switch(keyEvent.getCode()){
             case UP:
-                groupPersonaje.setLayoutY((groupPersonaje.getLayoutY())-3);
+                //groupPersonaje.setLayoutY((groupPersonaje.getLayoutY())-3);
                 groupPersonajeDirection = -1;
                 break;
             case DOWN:
-                //groupPersonaje.setLayoutY((groupPersonaje.getLayoutY())+3);
+                groupPersonaje.setLayoutY((groupPersonaje.getLayoutY())+3);
                 groupPersonajePosY= 1;
                 break;
             case RIGHT:
@@ -199,11 +199,8 @@ public class App extends Application {
                     groupPersonajePosY += groupPersonajeCurrentSpeed * groupPersonajeDirection;
                     if (groupPersonajePosY <= 0|| groupPersonajePosY >= SCENE_HEIGHT-groupPersonajeHeight) {
                         groupPersonajeDirection = 0;
-                    }
-                    if(groupPersonajePosY <= 0) {
-                        groupPersonajeDirection = 0;
                         groupPersonajePosY = 0;
-                        
+                       
                     }else if (groupPersonajePosY >= SCENE_HEIGHT- groupPersonajeHeight){
                         groupPersonajeDirection = 0;
                         groupPersonajePosY = (short) (SCENE_HEIGHT - groupPersonajeHeight);
