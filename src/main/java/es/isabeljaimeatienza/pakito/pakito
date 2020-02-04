@@ -13,13 +13,8 @@ import static javafx.scene.input.KeyCode.RIGHT;
 import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -76,12 +71,7 @@ public class App extends Application {
     
     //Para que se mueva el personaje hacia arriba
     boolean arriba = false;
-    boolean abajo = false;
     boolean derecha = false;
-    boolean izquierda = false;
-    boolean transparente = false;
-    
-    
     /**
      *
      * @param stage
@@ -151,7 +141,7 @@ public class App extends Application {
     //llamando a métodos del objeto circleBall
     circleBall.setCenterX(0); // obligatoriamente debe de tener una medida, double permite decimales
     circleBall.setCenterY(600);
-    circleBall.setRadius(15);//son métodos: nosequé. lo que sea
+    circleBall.setRadius(20);//son métodos: nosequé. lo que sea
     circleBall.setFill(javafx.scene.paint.Color.RED);//Cambiar el color de la bola
 
 
@@ -183,23 +173,25 @@ public class App extends Application {
             
             case UP:
                 //groupPersonaje.setLayoutY((groupPersonaje.getLayoutY())-3);
-                groupPersonajeDirection = -1;
+                //groupPersonajeDirection = -1;
+                arriba=true;
                 
                 break;
             case DOWN:
-                
+                arriba=false;
                 //groupPersonaje.setLayoutY((groupPersonaje.getLayoutY())+3);
                 groupPersonajePosY+= 1;
                 break;
             case RIGHT:
-              
+                //arriba=false;
+                derecha= true;
                 //groupPersonaje.setLayoutX((groupPersonaje.getLayoutX())+3);
-                groupPersonajePosX+= 1;
+                //groupPersonajePosX+= 1;
                 break;
             case LEFT:
                 //arriba=false;
-                
-                //groupPersonaje.setLayoutX((groupPersonaje.getLayoutX())-3);
+                derecha=false;
+                groupPersonaje.setLayoutX((groupPersonaje.getLayoutX())-3);
                 groupPersonajePosX= -1;
                 break;
         }
@@ -213,73 +205,36 @@ public class App extends Application {
                     circleBall.setCenterX(ballCenterX);
                     ballCenterX+=ballCurrentSpeedX * ballDirectionX;
                     
-                    groupPersonaje.setLayoutY(groupPersonajePosY);
-                    groupPersonajePosY+=groupPersonajeCurrentSpeed*groupPersonajeDirection;
-                    
-                    groupPersonaje.setLayoutX(groupPersonajePosX);
-                    groupPersonajePosX+=groupPersonajeCurrentSpeed*groupPersonajeDirection;
-                   
-                    /*if (groupPersonajePosY<=0 && groupPersonajePosY >=SCENE_HEIGHT ){
-                        groupPersonajeDirection-=1;
-                    }
                     // Hará que el imageView_personaje se mueva hacia arriba solo al pusar UP
                    
-                    /*if (arriba==true && derecha == false){
+                    if (arriba==true && derecha == false){
                         groupPersonajePosY-=3;
                         groupPersonaje.setLayoutY(groupPersonajePosY);                     
-                    }
-                    if (groupPersonajePosY>=SCENE_HEIGHT){
-                        groupPersonajePosY+=3;
-                        //groupPersonaje.setLayoutX(groupPersonajePosX);                         
+                    }else if (derecha==true && arriba==false){
+                        groupPersonajePosX+=3;
+                        groupPersonaje.setLayoutX(groupPersonajePosX);                         
                     }else if (arriba==true && derecha==true){
                         groupPersonajePosY-=3;
                         groupPersonaje.setLayoutY(groupPersonajePosY); 
                         groupPersonajePosX+=3;
                         groupPersonaje.setLayoutX(groupPersonajePosX);
                         
-                    }else if (abajo==true&& derecha==false){
-                        groupPersonajePosY+=3;
-                        groupPersonaje.setLayoutY(groupPersonajePosY); 
-                    
-                    }else if (groupPersonajePosY <= 0){
-                        groupPersonajeDirection = 0;
-                        groupPersonajePosY = 0;
-                
-                    } else if (groupPersonajePosY >= SCENE_HEIGHT){
-                        groupPersonajeDirection = +1;
-                        groupPersonajePosY = (short)(SCENE_HEIGHT);
-                    }*/
-                     
+                    }else{
+                        System.out.println("caida");    
+                    }
                     Shape shapeCollision = Shape.intersect(circleBall, rectpersonaje);
                     
                     boolean vaciaCollision = shapeCollision.getBoundsInParent().isEmpty();
                     if (vaciaCollision == false){
-                        groupPersonaje.setVisible(transparente);
-                        Text text = new Text();
-                              //Setting font to the text 
-                       text.setFont(Font.font(null, FontWeight.BOLD, 50));
-                       text.setStyle("-fx-font-size: 50px;"); 
-                        text.setStroke(Color.BLUE);
-                        text.setFill(Color.WHITE);
-
-                       //setting the position of the text
-                       text.setX(SCENE_WIDTH/2); 
-                       text.setY(SCENE_HEIGHT/2);          
-
-                       //Setting the text to be added. 
-                       text.setText("Tan matao"); 
-                       //Creating a Group object  
-                       root.getChildren().add(text);
-                       
+                        System.out.println("Ha colisionado");
                     }
-              
-            })
+                })
         );
 
    timeline2.setCycleCount(Timeline.INDEFINITE);
    timeline2.play();
    
-     
+
     }
     
     /**
