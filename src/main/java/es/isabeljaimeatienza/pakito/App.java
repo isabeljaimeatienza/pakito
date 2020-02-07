@@ -75,6 +75,9 @@ public class App extends Application {
     short groupPersonajeWidht = 30;
     short groupPersonajePosY = 0;
     byte groupPersonajeCurrentSpeed = 40; 
+    /* nuestro personaje puede hacer movimientos hacia arriba o hacia abajo.
+    Debido a las 2 direcciones posibles necesitaremos declararlas. Y hará movimientos
+    verticales y X hará los horizontales. La dirección puede ser -1 - 0- 1*/
     byte groupPersonajeDirectionY = 0; 
     byte groupPersonajeDirectionX = 0; 
     short groupPersonajePosX = SCENE_WIDTH/4;
