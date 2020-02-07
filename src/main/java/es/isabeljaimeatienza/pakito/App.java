@@ -33,8 +33,8 @@ import javafx.util.Duration;
  * JavaFX App
  */
 public class App extends Application {
-     int vida = 5; 
     
+    int vida = 5;
     // Bola que le será lanzada al imageView_personaje-----------------------------------------------------
     short ballCenterX = 80; //poner variables globales debajo del class
     byte ballCurrentSpeedX = 2; //esto hará que cambiemos la posición cuando queramos, es decir, le damos la velocidad, lo que le vamos sumando o restando
@@ -75,7 +75,8 @@ public class App extends Application {
     short groupPersonajeWidht = 30;
     short groupPersonajePosY = 0;
     byte groupPersonajeCurrentSpeed = 40; 
-    byte groupPersonajeDirection = 0; 
+    byte groupPersonajeDirectionY = 0; 
+    byte groupPersonajeDirectionX = 0; 
     short groupPersonajePosX = SCENE_WIDTH/4;
     
     //Para que se mueva el personaje hacia arriba
@@ -87,14 +88,14 @@ public class App extends Application {
     
     Text text = new Text();
     short TEXT_SIZE= 20;
-    
+     //me retorna un número
     
     /**
      *
      * @param stage
      */
     
- @Override
+    @Override
     public void start(Stage stage) {
  
         //Creación de nuevo objeto, en este caso se trata de nuestro App donde jugaremos--------------
@@ -132,223 +133,228 @@ public class App extends Application {
         root.getChildren().add(imageView_fondo2);
         root.getChildren().add(imageView_personaje);
         
-        // Comenzamos con la animación del fondo, en este caso se mueve de modo lateral----------------
+
+       
+        //new Circle--> crear un objeto de la clase Circle
+        Circle circleBall = new Circle(); //aquí voy a guardar una bola, con new me creo objeto circulo
+        //llamando a métodos del objeto circleBall
+        circleBall.setCenterX(0); // obligatoriamente debe de tener una medida, double permite decimales
+        circleBall.setCenterY(600);
+        circleBall.setRadius(15);//son métodos: nosequé. lo que sea
+        circleBall.setFill(javafx.scene.paint.Color.RED);//Cambiar el color de la bola
+        double r= circleBall.getRadius()*2;
+
+
+
+
+       //Circle circleBall2= new Circle(10, 30, 7); es otro modo de hacer la bola pero con menos líneas
+
+        root.getChildren().add(circleBall);//los hijos hace referencia a las cosas que contiene el App
+
+
+
+
+        //Creación de rectángulo    
+        javafx.scene.shape.Rectangle rectpersonaje = new javafx.scene.shape.Rectangle(90,130);
+        rectpersonaje.setLayoutX(SCENE_HEIGHT/4); 
+        rectpersonaje.setLayoutY(SCENE_WIDTH/2);
+        rectpersonaje.setFill(javafx.scene.paint.Color.TRANSPARENT);
+        // Creación del grupo donde encontraremos la imagen con el rectángulo   
+        Group groupPersonaje = new Group();
+        //agrupamos el rectangulo creado + el perosnaje
+        groupPersonaje.getChildren().add(rectpersonaje);
+        groupPersonaje.getChildren().add(imageView_personaje);
+        root.getChildren().add(groupPersonaje);
+
+            // LAYOUTS PARA MOSTRAR PUNTUACIONES 
+         // LAYOUT PRINCIPAL
+        HBox paneScores = new HBox();
+        paneScores.setTranslateY (20);
+        paneScores.setMinWidth (SCENE_WIDTH);
+        paneScores.setAlignment(Pos.CENTER);
+        paneScores.setSpacing(100);
+        root.getChildren().add(paneScores);
+
+         //Layout para puntuación actual
+        HBox paneCurrentScore = new HBox();
+        paneCurrentScore.setSpacing(10);
+        paneScores.getChildren().add (paneCurrentScore);
+
+          //Texto de etiqueta para la puntuación
+        Text textTitleScore = new Text ("Score:");
+        textTitleScore.setFont(Font.font(20));
+        textTitleScore.setFill(Color.WHITE);
+
+           //Texto para la puntuación
+        Text textScore = new Text (String.valueOf(vida));
+        textScore.setFont(Font.font(TEXT_SIZE));
+        textScore.setFill(Color.WHITE);
+
+          //Setting font to the text 
+        text.setFont(Font.font(null, FontWeight.BOLD, 50));
+        text.setStyle("-fx-font-size: 40px;"); 
+        text.setStroke(Color.BLUE);
+        text.setFill(Color.WHITE);
+
+        //setting the position of the text
+        text.setX(500); 
+        text.setY(50);          
+
+        //Setting the text to be added. 
+        text.setText("Score:" + String.valueOf(vida)); 
+        //Creating a Group object  
+        root.getChildren().add(text);
+
+
+        // AudioClip sonido;
+        //sonido = java.applet.Applet.newAudioClip(getClass().getResource("/sonido/Otsukare.wav.mp3"));
+        //reconocer teclas-detectarlas
+        scene.setOnKeyPressed((final KeyEvent keyEvent) -> {
+            switch(keyEvent.getCode()){
+
+                case UP:
+                    groupPersonaje.setLayoutY((groupPersonaje.getLayoutY())-3);
+                    //groupPersonaje = -1;
+
+                    break;
+                case DOWN:
+
+                    //groupPersonaje.setLayotY((groupPersonaje.getLayoutY())+3);
+                    groupPersonajePosY+= 1;
+                    break;
+                case RIGHT:
+
+                    groupPersonaje.setLayoutX((groupPersonaje.getLayoutX())+3);
+                    groupPersonajePosX+= 1;
+                    break;
+                case LEFT:
+                    //arriba=false;
+
+                    groupPersonaje.setLayoutX((groupPersonaje.getLayoutX())-3);
+                    groupPersonajePosX= -1;
+                    break;
+            }
+        });
+
+        
+                // Comenzamos con la animación del fondo, en este caso se mueve de modo lateral----------------
         Timeline timeline;
         timeline = new Timeline(
                 // 0.017 ~= 60 FPS
-                new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
-                    fondoX1--;
-                    fondoX2--;
-                    
+            new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
+                fondoX1--;
+                fondoX2--;
+
+                imageView_fondo.setX(fondoX1);
+                imageView_fondo2.setX(fondoX2);
+                if (fondoX2 == 0){
+                    fondoX1 = 0;
+                    fondoX2 = SCENE_WIDTH;
                     imageView_fondo.setX(fondoX1);
                     imageView_fondo2.setX(fondoX2);
-                    if (fondoX2 == 0){
-                        fondoX1 = 0;
-                        fondoX2 = SCENE_WIDTH;
-                        imageView_fondo.setX(fondoX1);
-                        imageView_fondo2.setX(fondoX2);
-                    }
-                })
+                }
+            })
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();  
-       
-    //new Circle--> crear un objeto de la clase Circle
-    Circle circleBall = new Circle(); //aquí voy a guardar una bola, con new me creo objeto circulo
-    //llamando a métodos del objeto circleBall
-    circleBall.setCenterX(0); // obligatoriamente debe de tener una medida, double permite decimales
-    circleBall.setCenterY(600);
-    circleBall.setRadius(15);//son métodos: nosequé. lo que sea
-    circleBall.setFill(javafx.scene.paint.Color.RED);//Cambiar el color de la bola
 
-
-
-    double r= circleBall.getRadius()*2; //me retorna un número
-
-   //Circle circleBall2= new Circle(10, 30, 7); es otro modo de hacer la bola pero con menos líneas
-
-    root.getChildren().add(circleBall);//los hijos hace referencia a las cosas que contiene el App
-       
-        
-     
-   
-    //Creación de rectángulo    
-    javafx.scene.shape.Rectangle rectpersonaje = new javafx.scene.shape.Rectangle(90,130);
-    rectpersonaje.setLayoutX(SCENE_HEIGHT/4); 
-    rectpersonaje.setLayoutY(SCENE_WIDTH/2);
-    rectpersonaje.setFill(javafx.scene.paint.Color.TRANSPARENT);
-    // Creación del grupo donde encontraremos la imagen con el rectángulo   
-    Group groupPersonaje = new Group();
-    //agrupamos el rectangulo creado + el perosnaje
-    groupPersonaje.getChildren().add(rectpersonaje);
-    groupPersonaje.getChildren().add(imageView_personaje);
-    root.getChildren().add(groupPersonaje);
-
-        // LAYOUTS PARA MOSTRAR PUNTUACIONES 
-     // LAYOUT PRINCIPAL
-     HBox paneScores = new HBox();
-     paneScores.setTranslateY (20);
-     paneScores.setMinWidth (SCENE_WIDTH);
-     paneScores.setAlignment(Pos.CENTER);
-     paneScores.setSpacing(100);
-     root.getChildren().add(paneScores);
-     
-     //Layout para puntuación actual
-     HBox paneCurrentScore = new HBox();
-     paneCurrentScore.setSpacing(10);
-     paneScores.getChildren().add (paneCurrentScore);
-     
-      //Texto de etiqueta para la puntuación
-    Text textTitleScore = new Text ("Score:");
-    textTitleScore.setFont(Font.font(20));
-    textTitleScore.setFill(Color.WHITE);
-    
-       //Texto para la puntuación
-     Text textScore = new Text ("0");
-    textScore.setFont(Font.font(TEXT_SIZE));
-    textScore.setFill(Color.WHITE);
-    
-      //Setting font to the text 
-    text.setFont(Font.font(null, FontWeight.BOLD, 50));
-    text.setStyle("-fx-font-size: 40px;"); 
-    text.setStroke(Color.BLUE);
-    text.setFill(Color.WHITE);
-
-    //setting the position of the text
-    text.setX(500); 
-    text.setY(50);          
-
-    //Setting the text to be added. 
-    text.setText("Score:" + vida); 
-    //Creating a Group object  
-    root.getChildren().add(text);
-    
-    
-     AudioClip sonido;
-     sonido = java.applet.Applet.newAudioClip(getClass().getResource("/sonido/Otsukare.wav.mp3"));
-    //reconocer teclas-detectarlas
-    scene.setOnKeyPressed((final KeyEvent keyEvent) -> {
-        switch(keyEvent.getCode()){
-            
-            case UP:
-                groupPersonaje.setLayoutY((groupPersonaje.getLayoutY())-3);
-                groupPersonajeDirection = -1;
-                
-                break;
-            case DOWN:
-                
-                groupPersonaje.setLayoutY((groupPersonaje.getLayoutY())+3);
-                groupPersonajePosY+= 1;
-                break;
-            case RIGHT:
-              
-                groupPersonaje.setLayoutX((groupPersonaje.getLayoutX())+3);
-                groupPersonajePosX+= 1;
-                break;
-            case LEFT:
-                //arriba=false;
-                
-                groupPersonaje.setLayoutX((groupPersonaje.getLayoutX())-3);
-                groupPersonajePosX= -1;
-                break;
-        }
-    });
-        
-        
-    Timeline timeline2;
+        Timeline timeline2;
         timeline2 = new Timeline(
                 // 0.017 ~= 60 FPS
-                new KeyFrame(Duration.seconds(0.017), (ActionEvent ) -> {
-                    circleBall.setCenterX(ballCenterX);
-                    ballCenterX+=ballCurrentSpeedX * ballDirectionX;
-                    
-                    groupPersonaje.setLayoutY(groupPersonajePosY);
-                    groupPersonajePosY+=groupPersonajeCurrentSpeed*groupPersonajeDirection;
-                    
+            new KeyFrame(Duration.seconds(0.017), (ActionEvent ) -> {
+                System.out.println(vida);
+                circleBall.setCenterX(ballCenterX);
+                ballCenterX+=ballCurrentSpeedX * ballDirectionX;
+
+                groupPersonaje.setLayoutY(groupPersonajePosY);
+                groupPersonajePosY+=groupPersonajeCurrentSpeed*groupPersonajeDirectionY;
+
+                groupPersonaje.setLayoutX(groupPersonajePosX);
+                groupPersonajePosX+=groupPersonajeCurrentSpeed*groupPersonajeDirectionX;
+
+               /* if (groupPersonajePosY<=0 && groupPersonajePosY >=SCENE_HEIGHT ){
+                    groupPersonajeDirection-=1;
+                }
+                // Hará que el imageView_personaje se mueva hacia arriba solo al pusar UP
+
+                if (arriba==true && derecha == false){
+                    groupPersonajePosY-=3;
+                    groupPersonaje.setLayoutY(groupPersonajePosY);                     
+                }
+                if (groupPersonajePosY>=SCENE_HEIGHT){
+                    groupPersonajePosY+=3;
+                    //groupPersonaje.setLayoutX(groupPersonajePosX);                         
+                }else if (arriba==true && derecha==true){
+                    groupPersonajePosY-=3;
+                    groupPersonaje.setLayoutY(groupPersonajePosY); 
+                    groupPersonajePosX+=3;
                     groupPersonaje.setLayoutX(groupPersonajePosX);
-                    groupPersonajePosX+=groupPersonajeCurrentSpeed*groupPersonajeDirection;
-                   
-                    if (groupPersonajePosY<=0 && groupPersonajePosY >=SCENE_HEIGHT ){
-                        groupPersonajeDirection-=1;
-                    }
-                    // Hará que el imageView_personaje se mueva hacia arriba solo al pusar UP
-                   
-                    if (arriba==true && derecha == false){
-                        groupPersonajePosY-=3;
-                        groupPersonaje.setLayoutY(groupPersonajePosY);                     
-                    }
-                    if (groupPersonajePosY>=SCENE_HEIGHT){
-                        groupPersonajePosY+=3;
-                        //groupPersonaje.setLayoutX(groupPersonajePosX);                         
-                    }else if (arriba==true && derecha==true){
-                        groupPersonajePosY-=3;
-                        groupPersonaje.setLayoutY(groupPersonajePosY); 
-                        groupPersonajePosX+=3;
-                        groupPersonaje.setLayoutX(groupPersonajePosX);
-                        
-                    }else if (abajo==true&& derecha==false){
-                        groupPersonajePosY+=3;
-                        groupPersonaje.setLayoutY(groupPersonajePosY); 
-                    
-                    }else if (groupPersonajePosY <= 0){
-                        groupPersonajeDirection = 0;
-                        groupPersonajePosY = 0;
-                
-                    } else if (groupPersonajePosY >= SCENE_HEIGHT){
-                        groupPersonajeDirection = +1;
-                        groupPersonajePosY = (short)(SCENE_HEIGHT);
-                    }
-                     
-                    Shape shapeCollision = Shape.intersect(circleBall, rectpersonaje);
-                    
-                    boolean vaciaCollision = shapeCollision.getBoundsInParent().isEmpty();
-                       
-                    
+
+                }else if (abajo==true&& derecha==false){
+                    groupPersonajePosY+=3;
+                    groupPersonaje.setLayoutY(groupPersonajePosY); 
+
+                }else if (groupPersonajePosY <= 0){
+                    groupPersonajeDirection = 0;
+                    groupPersonajePosY = 0;
+
+                } else if (groupPersonajePosY >= SCENE_HEIGHT){
+                    groupPersonajeDirection = +1;
+                    groupPersonajePosY = (short)(SCENE_HEIGHT);
+                }*/
+
+                Shape shapeCollision = Shape.intersect(circleBall, rectpersonaje);
+
+                boolean vaciaCollision = shapeCollision.getBoundsInLocal().isEmpty();
+
+                if (vida>0){
                     if (vaciaCollision == false){  
-                        circleBall.setCenterX(0);
-                        
-                        //Irá restando vida cada vez que colisione
+                        System.out.println("HA COLISIONADO");
+                        ballCenterX = 0;
+
+                        //Irá restando  cada vez que colisione
                         vida--;
-                        textScore.setText(String.valueOf(vida));
+                        text.setText("Score:" + String.valueOf(vida));
                         System.out.println(vida);
-                        
-                    }else if (vida<=0){
-                       
-                        //HARÁ QUE EL PERSONAJE DESAPAREZCA
-                        groupPersonaje.setVisible(transparente);
-                        //Setting font to the text 
-                       text.setFont(Font.font(null, FontWeight.BOLD, 50));
-                       text.setStyle("-fx-font-size: 50px;"); 
-                       text.setStroke(Color.BLUE);
-                       text.setFill(Color.WHITE);
-
-                       //setting the position of the text
-                       text.setX(SCENE_WIDTH/2); 
-                       text.setY(SCENE_HEIGHT/2);          
-
-                       //Setting the text to be added. 
-                       text.setText("GAME OVER"); 
-                       //Creating a Group object  
-                       root.getChildren().add(text);
-                       
                     }
-              
+                }else{
+
+                    //HARÁ QUE EL PERSONAJE DESAPAREZCA
+                   groupPersonaje.setVisible(transparente);
+                    //Setting font to the text 
+                   text.setFont(Font.font(null, FontWeight.BOLD, 50));
+                   text.setStyle("-fx-font-size: 50px;"); 
+                   text.setStroke(Color.BLUE);
+                   text.setFill(Color.WHITE);
+
+                   //setting the position of the text
+                   text.setX(SCENE_WIDTH/2); 
+                   text.setY(SCENE_HEIGHT/2);          
+
+                   //Setting the text to be added. 
+                   text.setText("GAME OVER"); 
+                   //Creating a Group object  
+                   root.getChildren().add(text);
+
+                }
+                  
+
             })
         );
 
-   timeline2.setCycleCount(Timeline.INDEFINITE);
-   timeline2.play();
+        timeline2.setCycleCount(Timeline.INDEFINITE);
+        timeline2.play();
    
      
     }
     
-    /**
-     *
-     * @param args
-     */
-    private void Sonido(){
-       
-}
+//        /**
+//         *
+//         * @param args
+//         */
+//        private void Sonido(){
+//
+//    }
             /**
      *
      * @param args
