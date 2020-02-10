@@ -36,7 +36,7 @@ public class App extends Application {
     
     int vida = 5;
     // Bola que le será lanzada al imageView_personaje-----------------------------------------------------
-    short ballCenterX = -80; //poner variables globales debajo del class
+    short ballCenterX = 1000; //poner variables globales debajo del class
     byte ballCurrentSpeedX = 2; //esto hará que cambiemos la posición cuando queramos, es decir, le damos la velocidad, lo que le vamos sumando o restando
                                   // dependiendo si quiero que vaya hacia atrás para que vaya a la izquierda o sumando y que vaya a la derecha
     byte ballDirectionX = 1; //multiplicas velocidad por dirección
@@ -58,7 +58,7 @@ public class App extends Application {
     short personajeHeight = 50;
     short personajeWidht = 30;
     short personajePosY = 0;
-    byte personajeCurrentSpeed = 100; 
+    byte personajeCurrentSpeed = 10; 
     byte personajeDirection = 0; 
     short personajePosX = 0;
     
@@ -66,7 +66,7 @@ public class App extends Application {
     short rectpersonajeHeight =50;
     short rectpersonajeWidth = 30;
     short rectpersonajePosY = 0;
-    byte rectpersonajeCurrentSpeed = 100; 
+    byte rectpersonajeCurrentSpeed = 10; 
     byte rectpersonajeDirection = 0; 
     short rectPersonajePosX = 0;
     
@@ -75,10 +75,10 @@ public class App extends Application {
     short groupPersonajeWidht = 30;
     short groupPersonajePosY = 0;
     short groupPersonajePosX = 0;
-    byte groupPersonajeCurrentSpeed = 100; 
+    byte groupPersonajeCurrentSpeed = 10; 
     /* nuestro personaje puede hacer movimientos hacia arriba o hacia abajo.
     Debido a las 2 direcciones posibles necesitaremos declararlas. Y hará movimientos
-    verticales y X hará los horizontales. La dirección puede ser -1 - 0- 1*/
+    verticales y X hará los horizontales. La dirección puede ser '-1' -' 0'- '1'*/
     byte groupPersonajeDirectionY = 0; 
     byte groupPersonajeDirectionX = 0; 
     
@@ -207,7 +207,7 @@ public class App extends Application {
         text.setY(50);          
 
         //Setting the text to be added. 
-        text.setText("Score:" + String.valueOf(vida)); 
+        text.setText("Life:" + String.valueOf(vida)); 
         //Creating a Group object  
         root.getChildren().add(text);
 
@@ -219,8 +219,7 @@ public class App extends Application {
             switch(keyEvent.getCode()){
 
                 case UP:
-                    
-                    groupPersonajePosY -= 100;
+                    groupPersonajePosY -= 5;
                     
                     break;
                 case DOWN:
@@ -263,10 +262,10 @@ public class App extends Application {
         Timeline timeline2;
         timeline2 = new Timeline(
                 // 0.017 ~= 60 FPS
-            new KeyFrame(Duration.seconds(0.017), (var ActionEvent ) -> {
+            new KeyFrame(Duration.seconds(0.017), (var ActionEvent ) -> { 
                 System.out.println(vida);
                 circleBall.setCenterX(ballCenterX);
-                ballCenterX+=ballCurrentSpeedX * ballDirectionX;
+                ballCenterX-=ballCurrentSpeedX * ballDirectionX;
                 if (ballCenterX >=SCENE_WIDTH){
                     ballCenterX = 6;
                     ballCurrentSpeedY = 5;
@@ -274,18 +273,14 @@ public class App extends Application {
 
                 groupPersonaje.setLayoutY(groupPersonajePosY);
                 groupPersonajePosY+=groupPersonajeCurrentSpeed*groupPersonajeDirectionY;
-                if (groupPersonajePosY == -100){
-                    groupPersonajePosX += 100;
-                    groupPersonajePosY += 100;
-                    groupPersonajeCurrentSpeed = 100;
+                if (groupPersonajeDirectionY == -100){
+                    groupPersonajePosX = 100;
+                    groupPersonajePosY = +100;
+                    
                 }
+                
 
-                /*if (izquierda=true && groupPersonajePosY == -100){
-                    groupPersonajePosY -= 100;
-                    groupPersonajePosX -= 100;
-                    groupPersonajePosY += 100;
-                    groupPersonajeCurrentSpeed = 100;
-                }*/
+              
                 groupPersonaje.setLayoutX(groupPersonajePosX);
                 groupPersonajePosX+=groupPersonajeCurrentSpeed*groupPersonajeDirectionX;
                 if (groupPersonajePosX >= 600){
@@ -294,36 +289,6 @@ public class App extends Application {
    
                 }
 
-               /* if (groupPersonajePosY<=0 && groupPersonajePosY >=SCENE_HEIGHT ){
-                    groupPersonajeDirectionY -= 1;
-                }
-               // Hará que el imageView_personaje se mueva hacia arriba solo al pusar UP
-
-                if (arriba==true && derecha == false){
-                    groupPersonajeDirectionY-=3;
-                    groupPersonaje.setLayoutY(groupPersonajePosY);                     
-                }
-                if (groupPersonajePosY>=SCENE_HEIGHT){
-                    groupPersonajePosY+=3;
-                    groupPersonaje.setLayoutX(groupPersonajePosX);                         
-                }else if (arriba==true && derecha==true){
-                    groupPersonajePosY-=3;
-                    groupPersonaje.setLayoutY(groupPersonajePosY); 
-                    groupPersonajePosX+=3;
-                    groupPersonaje.setLayoutX(groupPersonajePosX);
-
-                }else if (abajo==true&& derecha==false){
-                    groupPersonajePosY+=3;
-                    groupPersonaje.setLayoutY(groupPersonajePosY); 
-
-                }else if (groupPersonajePosY <= 0){
-                    groupPersonajeDirectionY = 0;
-                    groupPersonajePosY = 0;
-
-                } else if (groupPersonajePosY >= SCENE_HEIGHT){
-                    groupPersonajeDirectionY = +1;
-                    groupPersonajePosY = (short)(SCENE_HEIGHT);
-                }*/
 
                 Shape shapeCollision = Shape.intersect(circleBall, rectpersonaje);
 
@@ -335,7 +300,7 @@ public class App extends Application {
 
                         //Irá restando  cada vez que colisione
                         vida--;
-                        text.setText("Score:" + String.valueOf(vida));
+                        text.setText("Life:" + String.valueOf(vida));
                         System.out.println(vida);
                     }
                 }else{
