@@ -36,7 +36,7 @@ public class App extends Application {
     
     int vida = 5;
     // Bola que le será lanzada al imageView_personaje-----------------------------------------------------
-    short ballCenterX = 80; //poner variables globales debajo del class
+    short ballCenterX = -80; //poner variables globales debajo del class
     byte ballCurrentSpeedX = 2; //esto hará que cambiemos la posición cuando queramos, es decir, le damos la velocidad, lo que le vamos sumando o restando
                                   // dependiendo si quiero que vaya hacia atrás para que vaya a la izquierda o sumando y que vaya a la derecha
     byte ballDirectionX = 1; //multiplicas velocidad por dirección
@@ -57,30 +57,31 @@ public class App extends Application {
     //Personaje de nuestra historia---------------------------------------------
     short personajeHeight = 50;
     short personajeWidht = 30;
-    short personajePosY = (short)((SCENE_HEIGHT- personajeHeight)/2);
-    byte personajeCurrentSpeed = 20; 
+    short personajePosY = 0;
+    byte personajeCurrentSpeed = 100; 
     byte personajeDirection = 0; 
-    short personajePosX = (short)((SCENE_WIDTH - personajeHeight)/2);
+    short personajePosX = 0;
     
     // Rectangulo que agruparemos con el imageView_personaje------------------------------
     short rectpersonajeHeight =50;
     short rectpersonajeWidth = 30;
-    short rectpersonajePosY = (short)((SCENE_HEIGHT- rectpersonajeHeight)/2);
-    byte rectpersonajeCurrentSpeed = 20; 
+    short rectpersonajePosY = 0;
+    byte rectpersonajeCurrentSpeed = 100; 
     byte rectpersonajeDirection = 0; 
-    short rectPersonajePosX = (short)((SCENE_WIDTH - rectpersonajeHeight)/2);
+    short rectPersonajePosX = 0;
     
     // Sobre el grupo creado (personaje+rectángulo)-----------
     short groupPersonajeHeight = 50;
     short groupPersonajeWidht = 30;
     short groupPersonajePosY = 0;
-    byte groupPersonajeCurrentSpeed = 40; 
+    short groupPersonajePosX = 0;
+    byte groupPersonajeCurrentSpeed = 100; 
     /* nuestro personaje puede hacer movimientos hacia arriba o hacia abajo.
     Debido a las 2 direcciones posibles necesitaremos declararlas. Y hará movimientos
     verticales y X hará los horizontales. La dirección puede ser -1 - 0- 1*/
     byte groupPersonajeDirectionY = 0; 
     byte groupPersonajeDirectionX = 0; 
-    short groupPersonajePosX = SCENE_WIDTH/4;
+    
     
     //Para que se mueva el personaje hacia arriba
     boolean arriba = false;
@@ -128,8 +129,8 @@ public class App extends Application {
         //Imagen que usaré como imageView_personaje-----------------------------------------------------------------------
         javafx.scene.image.Image image3 = new javafx.scene.image.Image(getClass().getResourceAsStream("/images/personaje.png"));
         ImageView imageView_personaje = new ImageView(image3);
-        imageView_personaje.setX(SCENE_HEIGHT/4);
-        imageView_personaje.setY(SCENE_WIDTH/2); 
+        imageView_personaje.setX(0);
+        imageView_personaje.setY(0); 
         
     
         root.getChildren().add(imageView_fondo);
@@ -159,14 +160,16 @@ public class App extends Application {
 
         //Creación de rectángulo    
         javafx.scene.shape.Rectangle rectpersonaje = new javafx.scene.shape.Rectangle(90,130);
-        rectpersonaje.setLayoutX(SCENE_HEIGHT/4); 
-        rectpersonaje.setLayoutY(SCENE_WIDTH/2);
+        rectpersonaje.setLayoutX(0); 
+        rectpersonaje.setLayoutY(0);
         rectpersonaje.setFill(javafx.scene.paint.Color.TRANSPARENT);
         // Creación del grupo donde encontraremos la imagen con el rectángulo   
         Group groupPersonaje = new Group();
         //agrupamos el rectangulo creado + el perosnaje
         groupPersonaje.getChildren().add(rectpersonaje);
         groupPersonaje.getChildren().add(imageView_personaje);
+        groupPersonajePosX = SCENE_HEIGHT/4;
+        groupPersonajePosY= (SCENE_WIDTH/2);
         root.getChildren().add(groupPersonaje);
 
             // LAYOUTS PARA MOSTRAR PUNTUACIONES 
@@ -216,31 +219,27 @@ public class App extends Application {
             switch(keyEvent.getCode()){
 
                 case UP:
-                    groupPersonaje.setLayoutY((groupPersonaje.getLayoutY())-3);
-                    //groupPersonaje = -1;
-
+                    
+                    groupPersonajePosY -= 100;
+                    
                     break;
                 case DOWN:
-
-                    //groupPersonaje.setLayotY((groupPersonaje.getLayoutY())+3);
-                    groupPersonajePosY+= 1;
+                    groupPersonajePosY += 5;
+                   
                     break;
                 case RIGHT:
-
-                    groupPersonaje.setLayoutX((groupPersonaje.getLayoutX())+3);
-                    groupPersonajePosX+= 1;
+                   groupPersonajePosX += 5;
+                   
                     break;
                 case LEFT:
-                    //arriba=false;
-
-                    groupPersonaje.setLayoutX((groupPersonaje.getLayoutX())-3);
-                    groupPersonajePosX= -1;
+                    groupPersonajePosX -= 5; 
+                    
                     break;
             }
         });
 
         
-                // Comenzamos con la animación del fondo, en este caso se mueve de modo lateral----------------
+        // Comenzamos con la animación del fondo, en este caso se mueve de modo lateral----------------
         Timeline timeline;
         timeline = new Timeline(
                 // 0.017 ~= 60 FPS
@@ -264,29 +263,49 @@ public class App extends Application {
         Timeline timeline2;
         timeline2 = new Timeline(
                 // 0.017 ~= 60 FPS
-            new KeyFrame(Duration.seconds(0.017), (ActionEvent ) -> {
+            new KeyFrame(Duration.seconds(0.017), (var ActionEvent ) -> {
                 System.out.println(vida);
                 circleBall.setCenterX(ballCenterX);
                 ballCenterX+=ballCurrentSpeedX * ballDirectionX;
+                if (ballCenterX >=SCENE_WIDTH){
+                    ballCenterX = 6;
+                    ballCurrentSpeedY = 5;
+                }
 
                 groupPersonaje.setLayoutY(groupPersonajePosY);
                 groupPersonajePosY+=groupPersonajeCurrentSpeed*groupPersonajeDirectionY;
+                if (groupPersonajePosY == -100){
+                    groupPersonajePosX += 100;
+                    groupPersonajePosY += 100;
+                    groupPersonajeCurrentSpeed = 100;
+                }
 
+                /*if (izquierda=true && groupPersonajePosY == -100){
+                    groupPersonajePosY -= 100;
+                    groupPersonajePosX -= 100;
+                    groupPersonajePosY += 100;
+                    groupPersonajeCurrentSpeed = 100;
+                }*/
                 groupPersonaje.setLayoutX(groupPersonajePosX);
                 groupPersonajePosX+=groupPersonajeCurrentSpeed*groupPersonajeDirectionX;
+                if (groupPersonajePosX >= 600){
+                    groupPersonajePosX -= 5;
+                    groupPersonajeCurrentSpeed =0;
+   
+                }
 
                /* if (groupPersonajePosY<=0 && groupPersonajePosY >=SCENE_HEIGHT ){
-                    groupPersonajeDirection-=1;
+                    groupPersonajeDirectionY -= 1;
                 }
-                // Hará que el imageView_personaje se mueva hacia arriba solo al pusar UP
+               // Hará que el imageView_personaje se mueva hacia arriba solo al pusar UP
 
                 if (arriba==true && derecha == false){
-                    groupPersonajePosY-=3;
+                    groupPersonajeDirectionY-=3;
                     groupPersonaje.setLayoutY(groupPersonajePosY);                     
                 }
                 if (groupPersonajePosY>=SCENE_HEIGHT){
                     groupPersonajePosY+=3;
-                    //groupPersonaje.setLayoutX(groupPersonajePosX);                         
+                    groupPersonaje.setLayoutX(groupPersonajePosX);                         
                 }else if (arriba==true && derecha==true){
                     groupPersonajePosY-=3;
                     groupPersonaje.setLayoutY(groupPersonajePosY); 
@@ -298,11 +317,11 @@ public class App extends Application {
                     groupPersonaje.setLayoutY(groupPersonajePosY); 
 
                 }else if (groupPersonajePosY <= 0){
-                    groupPersonajeDirection = 0;
+                    groupPersonajeDirectionY = 0;
                     groupPersonajePosY = 0;
 
                 } else if (groupPersonajePosY >= SCENE_HEIGHT){
-                    groupPersonajeDirection = +1;
+                    groupPersonajeDirectionY = +1;
                     groupPersonajePosY = (short)(SCENE_HEIGHT);
                 }*/
 
@@ -312,7 +331,6 @@ public class App extends Application {
 
                 if (vida>0){
                     if (vaciaCollision == false){  
-                        System.out.println("HA COLISIONADO");
                         ballCenterX = 0;
 
                         //Irá restando  cada vez que colisione
