@@ -35,6 +35,7 @@ import javafx.util.Duration;
 public class App extends Application {
     
     int vida = 5;
+    int score = 0;
     // Bola que le será lanzada al imageView_personaje-----------------------------------------------------
     short ballCenterX = 1000; //poner variables globales debajo del class
     byte ballCurrentSpeedX = 2; //esto hará que cambiemos la posición cuando queramos, es decir, le damos la velocidad, lo que le vamos sumando o restando
@@ -62,6 +63,22 @@ public class App extends Application {
     byte personajeDirection = 0; 
     short personajePosX = 0;
     
+    //Pua de nuestra historia---------------------------------------------
+    short puaHeight = 50;
+    short puaWidht = 30;
+    short puaPosY = 0;
+    byte puaCurrentSpeed = 10; 
+    byte puaDirection = 0; 
+    short puaPosX = 0;
+    
+        // Rectangulo que agruparemos con el imageView_pua------------------------------
+    short rectPuaHeight =50;
+    short rectPuaWidth = 30;
+    short rectPuaPosY = 0;
+    byte rectPuaCurrentSpeed = 10; 
+    byte rectPuaDirection = 0; 
+    short rectPuaPosX = 0;
+    
     // Rectangulo que agruparemos con el imageView_personaje------------------------------
     short rectpersonajeHeight =50;
     short rectpersonajeWidth = 30;
@@ -82,6 +99,13 @@ public class App extends Application {
     byte groupPersonajeDirectionY = 0; 
     byte groupPersonajeDirectionX = 0; 
     
+     // Sobre el grupo creado (Pua+rectángulo)-----------
+    short groupPuaHeight = 50;
+    short groupPuaWidht = 30;
+    short groupPuaPosY = 0;
+    short groupPuaPosX = 0;
+    byte groupPuaCurrentSpeed = 10; 
+    byte groupPuaDirectionY = 0; 
     
     //Para que se mueva el personaje hacia arriba
     boolean arriba = false;
@@ -92,6 +116,8 @@ public class App extends Application {
     
     Text text = new Text();
     short TEXT_SIZE= 20;
+    Text text2 = new Text();
+    short TEXT2_SIZE= 20;
      //me retorna un número
     
     /**
@@ -132,11 +158,15 @@ public class App extends Application {
         imageView_personaje.setX(0);
         imageView_personaje.setY(0); 
         
+        javafx.scene.image.Image image4 = new javafx.scene.image.Image(getClass().getResourceAsStream("/images/pua.png"));
+        ImageView imageView_pua = new ImageView(image4);
+        imageView_personaje.setX(0);
+        imageView_personaje.setY(0); 
     
         root.getChildren().add(imageView_fondo);
         root.getChildren().add(imageView_fondo2);
         root.getChildren().add(imageView_personaje);
-        
+        root.getChildren().add(imageView_pua);
 
        
         //new Circle--> crear un objeto de la clase Circle
@@ -158,12 +188,28 @@ public class App extends Application {
 
 
 
-        //Creación de rectángulo    
+        //Creación de rectángulo para personaje
         javafx.scene.shape.Rectangle rectpersonaje = new javafx.scene.shape.Rectangle(90,130);
         rectpersonaje.setLayoutX(0); 
         rectpersonaje.setLayoutY(0);
         rectpersonaje.setFill(javafx.scene.paint.Color.TRANSPARENT);
+        
+        //Creación de rectángulo para pua  
+        javafx.scene.shape.Rectangle rectpua = new javafx.scene.shape.Rectangle(60,50);
+        rectpua.setLayoutX(0); 
+        rectpua.setLayoutY(0);
+        rectpua.setFill(javafx.scene.paint.Color.BLACK);
+        
         // Creación del grupo donde encontraremos la imagen con el rectángulo   
+        Group groupPua = new Group();
+    //agrupamos el rectangulo creado + púa 
+        groupPua.getChildren().add(rectpua);
+        groupPua.getChildren().add(imageView_pua);
+        groupPuaPosX = (SCENE_HEIGHT/4);
+        groupPuaPosY= (SCENE_WIDTH/2);
+        root.getChildren().add(groupPua);
+        
+    // Creación del grupo donde encontraremos la imagen con el rectángulo   
         Group groupPersonaje = new Group();
         //agrupamos el rectangulo creado + el perosnaje
         groupPersonaje.getChildren().add(rectpersonaje);
@@ -172,8 +218,8 @@ public class App extends Application {
         groupPersonajePosY= (SCENE_WIDTH/2);
         root.getChildren().add(groupPersonaje);
 
-            // LAYOUTS PARA MOSTRAR PUNTUACIONES 
-         // LAYOUT PRINCIPAL
+        // LAYOUTS PARA MOSTRAR PUNTUACIONES 
+        // LAYOUT PRINCIPAL
         HBox paneScores = new HBox();
         paneScores.setTranslateY (20);
         paneScores.setMinWidth (SCENE_WIDTH);
@@ -181,7 +227,7 @@ public class App extends Application {
         paneScores.setSpacing(100);
         root.getChildren().add(paneScores);
 
-         //Layout para puntuación actual
+        //Layout para puntuación actual
         HBox paneCurrentScore = new HBox();
         paneCurrentScore.setSpacing(10);
         paneScores.getChildren().add (paneCurrentScore);
@@ -210,7 +256,20 @@ public class App extends Application {
         text.setText("Life:" + String.valueOf(vida)); 
         //Creating a Group object  
         root.getChildren().add(text);
+        
+                  //Setting font to the text 
+        text2.setFont(Font.font(null, FontWeight.BOLD, 50));
+        text2.setStyle("-fx-font-size: 40px;"); 
+        text2.setStroke(Color.BLUE);
+        text2.setFill(Color.WHITE);
 
+        //setting the position of the text
+        text2.setX(680); 
+        text2.setY(50);   
+
+        text2.setText("Score:" + String.valueOf(score)); 
+        //Creating a Group object  
+        root.getChildren().add(text2);
 
         // AudioClip sonido;
         //sonido = java.applet.Applet.newAudioClip(getClass().getResource("/sonido/Otsukare.wav.mp3"));
@@ -219,7 +278,7 @@ public class App extends Application {
             switch(keyEvent.getCode()){
 
                 case UP:
-                    groupPersonajePosY -= 5;
+                    groupPersonajePosY -= 100;
                     
                     break;
                 case DOWN:
@@ -307,6 +366,8 @@ public class App extends Application {
 
                     //HARÁ QUE EL PERSONAJE DESAPAREZCA
                    groupPersonaje.setVisible(transparente);
+                 
+          
                     //Setting font to the text 
                    text.setFont(Font.font(null, FontWeight.BOLD, 50));
                    text.setStyle("-fx-font-size: 50px;"); 
@@ -323,8 +384,22 @@ public class App extends Application {
                    root.getChildren().add(text);
 
                 }
-                  
+                
+                Shape shapepua = Shape.intersect(rectpersonaje, rectpua);
 
+                boolean vaciaCollisionpua = shapeCollision.getBoundsInLocal().isEmpty();
+
+                if (score==5){
+                    if (vaciaCollisionpua == false){  
+                        groupPuaPosX = 0;
+
+                        //Irá restando  cada vez que colisione
+                        score ++;
+                        text2.setText("Score:" + String.valueOf(score));
+                        System.out.println(score);
+                    }
+                  
+                }
             })
         );
 
