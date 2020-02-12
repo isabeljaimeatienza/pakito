@@ -1,7 +1,6 @@
 package es.isabeljaimeatienza.pakito;
 
 
-import java.applet.AudioClip;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -385,12 +384,13 @@ public class App extends Application {
 
                 }
                 
+                Shape shapeCollision2 = Shape.intersect(rectpersonaje, rectpua); 
                 Shape shapepua = Shape.intersect(rectpersonaje, rectpua);
 
-                boolean vaciaCollisionpua = shapeCollision.getBoundsInLocal().isEmpty();
+                boolean vaciaCollisionPua = shapeCollision2.getBoundsInLocal().isEmpty();
 
-                if (score==5){
-                    if (vaciaCollisionpua == false){  
+                
+                    if (vaciaCollisionPua == false){  
                         groupPuaPosX = 0;
 
                         //Irá restando  cada vez que colisione
@@ -399,7 +399,7 @@ public class App extends Application {
                         System.out.println(score);
                     }
                   
-                }
+                
             })
         );
 
