@@ -1,7 +1,8 @@
 package es.isabeljaimeatienza.pakito;
 
 
-import java.applet.AudioClip;
+
+import java.io.File;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -25,6 +26,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javax.print.attribute.standard.Media;
 
 
 
@@ -34,7 +36,7 @@ import javafx.util.Duration;
  */
 public class App extends Application {
     
-    int vida = 1;
+    int vida = 2;
     int score = 0;
     // Bola que le será lanzada al imageView_personaje-----------------------------------------------------
     short ballCenterX = 1000; //poner variables globales debajo del class
@@ -46,6 +48,7 @@ public class App extends Application {
     byte ballCurrentSpeedY = 2; //esto hará que cambiemos la posición cuando queramos, es decir, le damos la velocidad, lo que le vamos sumando o restando
                                   // dependiendo si quiero que vaya hacia atrás para que vaya a la izquierda o sumando y que vaya a la derecha
     byte ballDirectionY = 1;
+    int bola = 1000;
    
     //Panel donde ocurrirá nuestro juego-----------------
     final short SCENE_HEIGHT =800;//poniendo final hacemos una constante-- mayúsculas para que directamente sepamos que son constantes
@@ -72,12 +75,12 @@ public class App extends Application {
     short guitarraPosX = 0;
     
         // Rectangulo que agruparemos con el imageView_guitarra------------------------------
-    short rectPuaHeight =80;
-    short rectPuaWidth = 30;
-    short rectPuaPosY = 0;
-    byte rectPuaCurrentSpeed = 10; 
-    byte rectPuaDirection = 0; 
-    short rectPuaPosX = 0;
+    short rectGuitarraHeight =15;
+    short rectGuitarraWidth = 20;
+    short rectGuitarraPosY = 0;
+    byte rectGuitarraCurrentSpeed = 10; 
+    byte rectGuitarraDirection = 0; 
+    short rectGuitarraPosX = 0;
     
     // Rectangulo que agruparemos con el imageView_personaje------------------------------
     short rectpersonajeHeight =50;
@@ -100,14 +103,16 @@ public class App extends Application {
     byte groupPersonajeDirectionY = 0; 
     byte groupPersonajeDirectionX = 0; 
     
-     // Sobre el grupo creado (Pua+rectángulo)-----------
+     // Sobre el grupo creado (guitarra+rectángulo)-----------
+    Group groupGuitarra;
     short groupGuitarraHeight = 50;
     short groupGuitarraWidht = 30;
-    short groupGuitarraPosY = 0;
-    short groupGuitarraPosX = 0;
+    short groupGuitarraPosY=550;
+    short groupGuitarraPosX =1000;
     byte groupGuitarraCurrentSpeed = 10; 
-    byte groupGuitarraDirection = 0; 
-    
+    byte groupGuitarraDirectionX = 0; 
+    byte groupGuitarraDirectionY = 0; 
+    int guitarra = 1000;
     //Para que se mueva el personaje hacia arriba
     boolean arriba = false;
     boolean abajo = false;
@@ -121,6 +126,10 @@ public class App extends Application {
     short TEXT2_SIZE= 20;
      //me retorna un número
     
+    
+     
+   
+        
     /**
      *
      * @param stage
@@ -138,7 +147,11 @@ public class App extends Application {
         stage.setScene(scene);
         stage.show();
         
-
+        
+        /*String musicFile = "Otsukare.mp3"; 
+        Media sound;
+        mApplause = new AudioClip(this.getClass().getResource("/sounds/applause.mp3").toExternalForm());
+        MediaPlayer mediaPlayer = new MediaPlayer(sound);*/
         // Creación de nuevo objeto, en este caso se trata de la imagen que usaremos para el fondo---------
         javafx.scene.image.Image image1 = new javafx.scene.image.Image(getClass().getResourceAsStream("/images/fondo.png"));
         ImageView imageView_fondo = new ImageView(image1);
@@ -189,8 +202,6 @@ public class App extends Application {
         root.getChildren().add(circleBall);//los hijos hace referencia a las cosas que contiene el App
 
 
-
-
         //Creación de rectángulo para personaje
         javafx.scene.shape.Rectangle rectpersonaje = new javafx.scene.shape.Rectangle(90,130);
         rectpersonaje.setLayoutX(0); 
@@ -204,12 +215,12 @@ public class App extends Application {
         rectguitarra.setFill(javafx.scene.paint.Color.TRANSPARENT);
         
         // Creación del grupo donde encontraremos la imagen con el rectángulo   
-        Group groupGuitarra = new Group();
+        groupGuitarra = new Group();
     //agrupamos el rectangulo creado + púa 
         groupGuitarra.getChildren().add(rectguitarra);
         groupGuitarra.getChildren().add(imageView_guitarra);
-        groupGuitarraPosX = 0;
-        groupGuitarraPosY= 0;
+        groupGuitarra.setLayoutX(groupGuitarraPosX);
+        groupGuitarra.setLayoutY(groupGuitarraPosY);
         root.getChildren().add(groupGuitarra);
         
     // Creación del grupo donde encontraremos la imagen con el rectángulo   
@@ -217,8 +228,8 @@ public class App extends Application {
         //agrupamos el rectangulo creado + el perosnaje
         groupPersonaje.getChildren().add(rectpersonaje);
         groupPersonaje.getChildren().add(imageView_personaje);
-        groupPersonajePosX = SCENE_HEIGHT/4;
-        groupPersonajePosY= (SCENE_WIDTH/2);
+        groupPersonajePosX = SCENE_WIDTH/4;
+        groupPersonajePosY= (550);
         root.getChildren().add(groupPersonaje);
 
         // LAYOUTS PARA MOSTRAR PUNTUACIONES 
@@ -248,7 +259,7 @@ public class App extends Application {
           //Setting font to the text 
         text.setFont(Font.font(null, FontWeight.BOLD, 50));
         text.setStyle("-fx-font-size: 40px;"); 
-        text.setStroke(Color.BLUE);
+        text.setStroke(Color.RED);
         text.setFill(Color.WHITE);
 
         //setting the position of the text
@@ -274,8 +285,9 @@ public class App extends Application {
         //Creating a Group object  
         root.getChildren().add(text2);
 
-        AudioClip sonido;
-        sonido = java.applet.Applet.newAudioClip(getClass().getResource("/sonido/Otsukare.wav.mp3"));
+        String musicFile = "Otsukare.wav.mp3";     // For example
+
+       
         //reconocer teclas-detectarlas
         scene.setOnKeyPressed((final KeyEvent keyEvent) -> {
             switch(keyEvent.getCode()){
@@ -333,12 +345,12 @@ public class App extends Application {
                     ballCurrentSpeedY = 5;
                 }
                 
-                groupGuitarra.setLayoutX(ballCenterX);
-                groupGuitarraDirection-=groupGuitarraCurrentSpeed *groupGuitarraDirection;
-                if (groupGuitarraPosX >=SCENE_WIDTH){
-                    groupGuitarraPosX = 10;
-                    groupGuitarraCurrentSpeed = 5;
-                }
+               
+               guitarra--;
+               groupGuitarra.setLayoutX(guitarra);
+                System.out.println(guitarra);
+                  
+                
 
                 groupPersonaje.setLayoutY(groupPersonajePosY);
                 groupPersonajePosY+=groupPersonajeCurrentSpeed*groupPersonajeDirectionY;
@@ -347,9 +359,7 @@ public class App extends Application {
                     groupPersonajePosY = 100;
                     
                 }
-                
-
-              
+                              
                 groupPersonaje.setLayoutX(groupPersonajePosX);
                 groupPersonajePosX+=groupPersonajeCurrentSpeed*groupPersonajeDirectionX;
                 if (groupPersonajePosX >= 600){
@@ -365,14 +375,25 @@ public class App extends Application {
 
                 if (vida>0){
                     if (vaciaCollision == false){  
-                        ballCenterX = 0;
-
+                        ballCenterX = 1080;
+                        
                         //Irá restando  cada vez que colisione
                         vida--;
-                        text.setText("Life:" + String.valueOf(vida));
+                        text.setText("Vida:" + String.valueOf(vida));
                         System.out.println(vida);
                     }
-                }else{
+                         Shape shapeCollision2 = Shape.intersect(rectpersonaje, rectguitarra); 
+                
+
+                boolean vaciaCollisionGuitarra = shapeCollision2.getBoundsInLocal().isEmpty();
+                if (vaciaCollisionGuitarra == false){  
+                    guitarra = 1080;
+                    //Irá restando  cada vez que colisione
+                    score ++;
+                    text2.setText("Score:" + String.valueOf(score));
+                    System.out.println(score);
+                }
+                }else if (vida == 0){
 
                     //HARÁ QUE EL PERSONAJE DESAPAREZCA
                    groupPersonaje.setVisible(transparente);
@@ -395,24 +416,7 @@ public class App extends Application {
 
                 }
                 
-                
-              
-                Shape shapeCollision2 = Shape.intersect(rectpersonaje, rectguitarra); 
-                
-
-                boolean vaciaCollisionPua = shapeCollision2.getBoundsInLocal().isEmpty();
-
-                
-                    if (vaciaCollisionPua == false){  
-                        groupGuitarraPosX = 0;
-
-                        //Irá restando  cada vez que colisione
-                        score ++;
-                        text2.setText("Score:" + String.valueOf(score));
-                        System.out.println(score);
-                    }
-                  
-                
+         
             })
         );
 
@@ -423,11 +427,12 @@ public class App extends Application {
     }
     
     private void resetGame(){
-        vida=0;
+        vida=3;
         text.setText(String.valueOf(vida));
         ballCenterX = 10;
         ballCurrentSpeedY = 3;
         groupPersonaje.setVisible(true);
+        score = 0;
         text2.setText(String.valueOf(score));
         
     }
