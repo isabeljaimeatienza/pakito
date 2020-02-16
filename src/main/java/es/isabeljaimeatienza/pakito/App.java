@@ -53,6 +53,7 @@ public class App extends Application {
     //Declaramos qué tipo de datos son vida y score.
     int vida = 2;
     int score = 0;
+    int level = 1;
     
 
     // Bola que le será lanzada al  -----------------------------------------------------
@@ -157,7 +158,8 @@ public class App extends Application {
     short TEXT_SIZE= 20;
     Text text2 = new Text();
     short TEXT2_SIZE= 20;
-     //me retorna un número
+    Text text3 = new Text();
+    short TEXT3_SIZE= 20;
     
     
      
@@ -289,7 +291,7 @@ public class App extends Application {
         textScore.setFont(Font.font(TEXT_SIZE));
         textScore.setFill(Color.WHITE);
 
-          //Setting font to the text 
+          //Cambia la fuente del texto
         text.setFont(Font.font(null, FontWeight.BOLD, 50));
         text.setStyle("-fx-font-size: 40px;"); 
         text.setStroke(Color.RED);
@@ -318,6 +320,21 @@ public class App extends Application {
         //Creating a Group object  
         root.getChildren().add(text2);
         Random randomenemigo = new Random(); // clases mayusculas 
+        
+              //Setting font to the text 
+        text3.setFont(Font.font(null, FontWeight.BOLD, 50));
+        text3.setStyle("-fx-font-size: 40px;"); 
+        text3.setStroke(Color.BLUE);
+        text3.setFill(Color.WHITE);
+
+        //setting the position of the text
+        text3.setX(300); 
+        text3.setY(50);          
+
+        //Setting the text to be added. 
+        text3.setText("Level:" + String.valueOf(level)); 
+        //Creating a Group object  
+        root.getChildren().add(text3);
        
         
         int randomPosXcircleBall = randomenemigo.nextInt(SCENE_WIDTH-100);
@@ -497,12 +514,14 @@ public class App extends Application {
                     boolean vaciaCollisionGuitarra = shapeCollision2.getBoundsInLocal().isEmpty();
                     if (vaciaCollisionGuitarra == false){
                         guitarra = 1080;
-                        //Irá restando  cada vez que colisione
+                        //Irá SUMANDO cada vez que colisione
                         score ++;
                         text2.setText("Score:" + String.valueOf(score));
                         
-                    }else if (score == 1){
+                    }else if (score == 2){
                         ball2CurrentSpeedX = 10;
+                        level ++;
+                        text3.setText("Level:" + String.valueOf(level));
                     }
                     }else if (vida <= 0){
 
