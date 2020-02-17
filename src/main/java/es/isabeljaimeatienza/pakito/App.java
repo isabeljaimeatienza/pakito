@@ -520,8 +520,11 @@ public class App extends Application {
                         
                     }else if (score == 2){
                         ball2CurrentSpeedX = 10;
-                        level ++;
-                        text3.setText("Level:" + String.valueOf(level));
+                        for (int i =0; i<5; i++){
+                                text3.setText("Level:" + String.valueOf(i));
+                        }
+                        
+                        
                     }
                     }else if (vida <= 0){
 
