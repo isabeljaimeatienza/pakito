@@ -137,7 +137,7 @@ public class App extends Application {
     byte groupPersonajeDirectionX = 0; 
     
      // Sobre el grupo creado (guitarra+rectángulo)-----------
-    Group groupGuitarra;
+    
     short groupGuitarraHeight = 50;
     short groupGuitarraWidht = 30;
     short groupGuitarraPosY=550;
@@ -226,7 +226,9 @@ public class App extends Application {
         circleBall.setFill(javafx.scene.paint.Color.RED);//Cambiar el color de la bola
         double r= circleBall.getRadius()*2;
 
-
+Random aleatorio = new Random();
+int a= aleatorio.nextInt(20);
+        System.out.println(a);
 
 
         Circle circleBall2= new Circle(1000, 600, 20);
@@ -250,7 +252,7 @@ public class App extends Application {
         rectguitarra.setVisible(transparente);
         
         // Creación del grupo donde encontraremos la imagen con el rectángulo   
-        groupGuitarra = new Group();
+        Group groupGuitarra = new Group();
         //agrupamos el rectangulo creado + guitarra
         groupGuitarra.getChildren().add(rectguitarra);
         groupGuitarra.getChildren().add(imageView_guitarra);
@@ -259,7 +261,7 @@ public class App extends Application {
         root.getChildren().add(groupGuitarra);
         
         // Creación del grupo donde encontraremos la imagen con el rectángulo   
-        Group groupPersonaje = new Group();
+        
         //agrupamos el rectangulo creado + el perosnaje
         groupPersonaje.getChildren().add(rectpersonaje);
         groupPersonaje.getChildren().add(imageView_personaje);
@@ -456,7 +458,7 @@ public class App extends Application {
                 if (groupGuitarraPosX <0){
                     groupGuitarra.setLayoutX(1000);
                     guitarra--;
-                    groupGuitarra.setLayoutX(guitarra);
+                    groupGuitarra.setLayoutX(1000);
                 }
                 
                 
