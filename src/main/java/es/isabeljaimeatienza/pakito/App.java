@@ -572,7 +572,7 @@ int a= aleatorio.nextInt(20);
         ballCenterX = 10;
         ballCurrentSpeedY = 3;
         ball2CenterX = 10;
-        ball2CurrentSpeedY = 3;
+        ball2CurrentSpeedX =2;
         score = 0;
         text2.setText("Score:" + String.valueOf(score));
 
