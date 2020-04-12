@@ -47,7 +47,7 @@ import javafx.util.Duration;
 public class App extends Application {
 
     //Declaramos qué tipo de datos son vida y score.
-    int vida = 2;
+    int vida = 3;
     int score = 0;
     int level = 1;
 
